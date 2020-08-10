@@ -111,14 +111,7 @@ class BaseDownloaderThread(QThread):
     """
     download thread , get job from Queue, and download ( and write to database)
     """
-    root_dir = ''
-    bbox = None
-    logger = None
-
     sub_progressBar_updated_signal = pyqtSignal()
-    running = True
-    stopped = False
-    task_q = queue.Queue()
 
     def __init__(self, root_dir, bbox, task_q, logger=None, write_db=False, db_file_name='tile.db'):
         super(BaseDownloaderThread, self).__init__()
@@ -143,6 +136,33 @@ class BaseDownloaderThread(QThread):
             Session = sessionmaker(bind=engine)
             self.session = Session()
             BaseModel.metadata.create_all(engine)
+
+    def _insert_metadata(self, key, value):
+        metadata = self.session.query(Metadata).filter(Metadata.name == key).one_or_none()
+        if metadata is None:
+            metadata = Metadata(key, value)
+            self.session.add(metadata)
+
+    def _init_metadata(self, name='cugxy', type_='baselayer', version='1.2', desc='cugxy', format='jpg',
+                       bounds='-180.0,-85,180,85'):
+        if not name:
+            name = 'cugxy'
+        if not type_:
+            type_ = 'baselayer'
+        if not version:
+            version = '1.2'
+        if not desc:
+            desc = 'cugxy'
+        if not format:
+            format = 'jpg'
+        self._insert_metadata('name', name)
+        self._insert_metadata('type', type_)
+        self._insert_metadata('version', version)
+        self._insert_metadata('description', desc)
+        self._insert_metadata('format', format)
+        if bounds:
+            self._insert_metadata('bounds', bounds)
+        self.commit()
 
     def __del__(self):
         self.wait()

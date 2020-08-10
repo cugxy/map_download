@@ -4,8 +4,14 @@
 支持如下
 - Google 混合影像、天地图注记、Cesium 地形下载
 - 多线程下载
-- 下载数据写入 sqlite 数据库，支持快速拷贝读取等，其中数据库结构如下：
+- 下载数据写入 sqlite 数据库，支持快速拷贝读取等，其中数据库结构如下, 支持 mbtile 格式：
 ```
+class Metadata(BaseModel):
+    __tablename__ = 'metadata'
+    name = Column(Text, primary_key=True)
+    value = Column(Text)
+
+
 class Tiles(BaseModel):
   __tablename__ = 'tiles'
   zoom_level = Column(Integer)

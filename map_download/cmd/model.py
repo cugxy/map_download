@@ -1,9 +1,22 @@
 # -*- coding: utf-8 -*-
 
-from sqlalchemy import Column, Integer, PrimaryKeyConstraint, LargeBinary, Index
+from sqlalchemy import Column, Integer, PrimaryKeyConstraint, LargeBinary, Index, Text
 from sqlalchemy.ext.declarative import declarative_base
 
 BaseModel = declarative_base()
+
+
+class Metadata(BaseModel):
+    __tablename__ = 'metadata'
+    name = Column(Text, primary_key=True)
+    value = Column(Text)
+
+    def __init__(self, name, value):
+        self.name = name
+        self.value = value
+
+    def __repr__(self):
+        return '<Metadata %s, %s>' % (self.name, self.value)
 
 
 class Tiles(BaseModel):

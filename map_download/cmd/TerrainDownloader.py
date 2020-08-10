@@ -37,8 +37,12 @@ class TerrainDownloaderThread(BaseDownloaderThread):
     URL = "https://assets.cesium.com/1/{z}/{x}/{y}.terrain?extensions=octvertexnormals-watermask&v=1.1.0"
 
     def __init__(self, root_dir, bbox, token, task_q, logger=None, write_db=False):
-        super(TerrainDownloaderThread, self).__init__(root_dir, bbox, task_q, logger, write_db=write_db, db_file_name='Terrain.db')
+        super(TerrainDownloaderThread, self).__init__(
+            root_dir, bbox, task_q, logger, write_db=write_db, db_file_name='Terrain.db')
         self.token = token
+        self._init_metadata(
+            format='terrain',
+            bounds='%f,%f,%f,%f' % (self.bbox.min_lng, self.bbox.min_lat, self.bbox.max_lng, self.bbox.max_lat))
 
     def get_url(self, x, y, z):
         return self.URL.format(x=x, y=y, z=z)

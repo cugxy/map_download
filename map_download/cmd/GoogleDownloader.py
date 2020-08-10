@@ -17,6 +17,8 @@ class GoogleDownloaderThread(BaseDownloaderThread):
     def __init__(self, root_dir, bbox, task_q, logger=None, write_db=False):
         super(GoogleDownloaderThread, self).__init__(root_dir, bbox, task_q, logger, write_db=write_db,
                                                      db_file_name='Google.db')
+        self._init_metadata(
+            bounds='%f,%f,%f,%f' % (self.bbox.min_lng, self.bbox.min_lat, self.bbox.max_lng, self.bbox.max_lat))
 
     def get_url(self, x, y, z):
         s = random.randint(1, 3)

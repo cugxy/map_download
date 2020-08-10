@@ -23,6 +23,8 @@ class TDTDownloaderThread(BaseDownloaderThread):
         self.token = '927189e42d80e95e48f39472387aacc6'
         if token is not None:
             self.token = token
+        self._init_metadata(
+            bounds='%f,%f,%f,%f' % (self.bbox.min_lng, self.bbox.min_lat, self.bbox.max_lng, self.bbox.max_lat))
 
     def get_url(self, x, y, z):
         s = random.randint(1, 6)
