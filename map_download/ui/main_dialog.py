@@ -65,7 +65,10 @@ class MainDialog(QDialog):
     def init_logger(self):
         self.logger = logging.getLogger('error')
         formatter = logging.Formatter('%(asctime)s-%(filename)s-%(levelname)s-%(message)s')
-        log_file = os.path.join(os.path.dirname(__file__), 'error.log')
+        log_dir = os.path.dirname(__file__)
+        log_file = os.path.join(log_dir, 'error.log')
+        if not os.path.exists(log_dir):
+            os.makedirs(log_dir)
         file_hdlr = logging.FileHandler(log_file)
         file_hdlr.setFormatter(formatter)
         self.logger.addHandler(file_hdlr)
